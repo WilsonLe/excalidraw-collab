@@ -1,10 +1,12 @@
 package middleware
 
 import (
+	"context"
 	"encoding/base64"
 	"net/http"
 	"strings"
 
+	"github.com/wilsonle/excalidraw-collab/constants"
 	"github.com/wilsonle/excalidraw-collab/models"
 )
 
@@ -36,7 +38,7 @@ func BasicAuth(next http.Handler) http.Handler {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-
-		next.ServeHTTP(w, r)
+		ctx := context.WithValue(r.Context(), constants.USERNAME_CONTEXT_KEY, username)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

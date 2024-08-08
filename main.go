@@ -12,9 +12,8 @@ import (
 func main() {
 	database.InitDB("./excalidraw-collab.db")
 
-	http.HandleFunc("/login", controllers.LoginHandler)
+	http.Handle("/ws", middleware.BasicAuth(http.HandlerFunc(controllers.WebsocketHandler)))
 
-	// Serve static files
 	fs := http.FileServer(http.Dir("./frontend/dist"))
 	http.Handle("/", middleware.BasicAuth(fs))
 
